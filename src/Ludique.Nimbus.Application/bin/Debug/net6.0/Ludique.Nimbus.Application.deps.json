@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Ludique.Nimbus.Application/1.0.0": {
+        "dependencies": {
+          "Ludique.Nimbus.Domain": "1.0.0"
+        },
+        "runtime": {
+          "Ludique.Nimbus.Application.dll": {}
+        }
+      },
+      "Ludique.Nimbus.Domain/1.0.0": {
+        "runtime": {
+          "Ludique.Nimbus.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Ludique.Nimbus.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Ludique.Nimbus.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
