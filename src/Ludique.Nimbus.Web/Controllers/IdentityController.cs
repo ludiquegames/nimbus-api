@@ -3,6 +3,7 @@ using Ludique.Nimbus.Infrastructure.Entities;
 using Ludique.Nimbus.Web.Models.Identity;
 using Ludique.Nimbus.Web.Services;
 using Ludique.Nimbus.Web.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -94,6 +95,19 @@ namespace Ludique.Nimbus.Web.Controllers
 
             await _messageService.SendAsync(message, cancellationToken);
 
+            return NoContent();
+        }
+
+        [HttpPost("password/change")]
+        [Authorize]
+        public async Task<ActionResult> ChangePasswordAsync([FromBody] ChangePasswordPayload payload)
+        {
+            User user = await _userManager.GetUserAsync(User);
+            IdentityResult result = await _userManager.ChangePasswordAsync(user, payload.CurrentPassword, payload.NewPassword);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result);
+            }
             return NoContent();
         }
     }
