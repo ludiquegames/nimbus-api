@@ -110,5 +110,58 @@ namespace Ludique.Nimbus.Web.Controllers
             }
             return NoContent();
         }
+
+        [HttpPost("password/recover")]
+        public async Task<ActionResult> RecoverPassword([FromBody] RecoverPasswordPayload payload, CancellationToken cancellationToken)
+        {
+            User? user = await _userManager.FindByEmailAsync(payload.Email);
+            if (user == null)
+            {
+                return BadRequest(new { code = "IncorrectCredentials" });
+            }
+
+            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var message = new Message(
+                Resources.Email.PasswordRecovery_Subject,
+                Resources.Email.PasswordRecovery_Body
+                    .Replace("{id}", user.Id.ToString())
+                    .Replace("{token}", token)
+                    .Replace("{baseUrl}", _applicationSettings.BaseUrl),
+                new[] { new Recipient(payload.Email) }
+            );
+
+            await _messageService.SendAsync(message, cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpPost("password/reset")]
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordPayload payload, CancellationToken cancellationToken)
+        {
+            User? user = await _userManager.FindByIdAsync(payload.Id.ToString());
+
+            if (user == null)
+            {
+                return BadRequest(new { Code = "InvalidId" });
+            }
+
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, payload.Token, payload.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result);
+            }
+
+            var message = new Message(
+                Resources.Email.AccountConfirmed_Subject,
+                Resources.Email.AccountConfirmed_Body,
+                new[] { new Recipient(user.Email) }
+            );
+
+            await _messageService.SendAsync(message, cancellationToken);
+
+            return NoContent();
+        }
     }
 }

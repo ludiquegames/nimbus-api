@@ -106,5 +106,32 @@ namespace Ludique.Nimbus.Web.Resources {
                 return ResourceManager.GetString("AccountCreation_Subject", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dear user,
+        ///It seems you have lost your password...
+        ///
+        ///In this case, please click on the link below to reset it:
+        ///{baseUrl}/confirm?id={id}&amp;token={token}
+        ///
+        ///If we&apos;ve been mistaken, we suggest you to delete this message.
+        ///
+        ///Cordially,
+        ///The Ludique Team.
+        /// </summary>
+        internal static string PasswordRecovery_Body {
+            get {
+                return ResourceManager.GetString("PasswordRecovery_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Your Password.
+        /// </summary>
+        internal static string PasswordRecovery_Subject {
+            get {
+                return ResourceManager.GetString("PasswordRecovery_Subject", resourceCulture);
+            }
+        }
     }
 }

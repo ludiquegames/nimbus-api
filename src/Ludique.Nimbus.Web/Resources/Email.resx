@@ -140,4 +140,19 @@ The Ludique Team</value>
   <data name="AccountCreation_Subject" xml:space="preserve">
     <value>Activate Your Account</value>
   </data>
+  <data name="PasswordRecovery_Body" xml:space="preserve">
+    <value>Dear user,
+It seems you have lost your password...
+
+In this case, please click on the link below to reset it:
+{baseUrl}/confirm?id={id}&amp;token={token}
+
+If we've been mistaken, we suggest you to delete this message.
+
+Cordially,
+The Ludique Team</value>
+  </data>
+  <data name="PasswordRecovery_Subject" xml:space="preserve">
+    <value>Reset Your Password</value>
+  </data>
 </root>
