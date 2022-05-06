@@ -1,6 +1,7 @@
 ﻿using Logitar.Email.SendGrid;
 using Ludique.Nimbus.Infrastructure;
 using Ludique.Nimbus.Infrastructure.Entities;
+using Ludique.Nimbus.Web.Services;
 using Ludique.Nimbus.Web.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,8 @@ namespace Ludique.Nimbus.Web
             }).AddDefaultTokenProviders().AddEntityFrameworkStores<NimbusDbContext>();
             services.AddSendGrid();
             services.AddSingleton(_configuration.GetSection("Application").Get<ApplicationSettings>());
+            services.AddSingleton(_configuration.GetSection("Jwt").Get<JwtSettings>());
+            services.AddScoped<ITokenService, JwtService>();
         }
         public override void Configure(IApplicationBuilder applicationBuilder)
         {

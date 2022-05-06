@@ -1,6 +1,7 @@
 ﻿using Logitar.Email;
 using Ludique.Nimbus.Infrastructure.Entities;
 using Ludique.Nimbus.Web.Models.Identity;
+using Ludique.Nimbus.Web.Services;
 using Ludique.Nimbus.Web.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +15,26 @@ namespace Ludique.Nimbus.Web.Controllers
         private readonly UserManager<User> _userManager;
         private readonly IMessageService _messageService;
         private readonly ApplicationSettings _applicationSettings;
+        private readonly ITokenService _tokenService;
 
-        public IdentityController(UserManager<User> userManager, IMessageService messageService, ApplicationSettings applicationSettings)
+        public IdentityController(UserManager<User> userManager, IMessageService messageService, ApplicationSettings applicationSettings, ITokenService tokenService)
         {
             _userManager = userManager;
             _messageService = messageService;
             _applicationSettings = applicationSettings;
+            _tokenService = tokenService;
+        }
+
+        [HttpPost("sign/in")]
+        public async Task<ActionResult<TokenModel>> SignIn([FromBody] SignInPayload payload)
+        {
+            User? user = await _userManager.FindByEmailAsync(payload.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, payload.Password))
+            {
+                return BadRequest(new { code = "IncorrectCredentials" });
+            }
+            TokenModel token = await _tokenService.GenerateAsync(user);
+            return Ok(token);
         }
 
         [HttpPost("sign/up")]
@@ -46,7 +61,7 @@ namespace Ludique.Nimbus.Web.Controllers
                     .Replace("{id}", user.Id.ToString())
                     .Replace("{token}", token)
                     .Replace("{baseUrl}", _applicationSettings.BaseUrl),
-                new[] { new Recipient(payload.Email) } // déclare un Recipient[]
+                new[] { new Recipient(payload.Email) }
             );
 
             await _messageService.SendAsync(message, cancellationToken);
