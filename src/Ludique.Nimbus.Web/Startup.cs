@@ -25,6 +25,7 @@ namespace Ludique.Nimbus.Web
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
+            services.AddCors();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddOpenApi(_jwtSettings);
@@ -71,6 +72,7 @@ namespace Ludique.Nimbus.Web
                     ));
                 }
 
+                application.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
                 application.UseHttpsRedirection();
                 application.UseAuthentication();
                 application.UseAuthorization();
